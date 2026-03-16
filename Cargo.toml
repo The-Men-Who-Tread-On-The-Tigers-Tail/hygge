@@ -1,0 +1,15 @@
+[package]
+name = "hygge"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1"
+directories = "5"
+rand = "0.8"
+rusqlite = { version = "0.31", features = ["bundled"] }
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+tempfile = "3"
