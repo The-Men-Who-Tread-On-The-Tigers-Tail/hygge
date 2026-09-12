@@ -31,3 +31,23 @@ From inside the `hygge/` directory:
 ```sh
 cargo test
 ```
+
+## Web interface
+
+The React interface lives in `web/` and uses the same built-in reflective question style as the CLI.
+
+From the repository root:
+
+```sh
+cd web
+npm install
+npm run dev
+```
+
+Open the local URL printed by Vite. To run the frontend test and production build:
+
+```sh
+cd web
+npm test
+npm run build
+```

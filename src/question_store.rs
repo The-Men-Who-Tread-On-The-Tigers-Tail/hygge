@@ -1,6 +1,6 @@
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 use directories::ProjectDirs;
-use rusqlite::{params, Connection, Row};
+use rusqlite::{Connection, Row, params};
 use std::path::{Path, PathBuf};
 
 use crate::models::Question;
