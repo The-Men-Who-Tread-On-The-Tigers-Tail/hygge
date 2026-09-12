@@ -71,15 +71,22 @@ describe('Hygge web interface', () => {
     expect(screen.queryByTestId('webgl-canvas')).not.toBeInTheDocument()
   })
 
-  it('provides keyboard-equivalent controls for both scene objects', async () => {
+  it('provides persistent, keyboard-equivalent controls for both scene objects', async () => {
     const user = userEvent.setup()
     render(<App />)
     const stone = screen.getByRole('button', { name: /wake the stone/i })
     const ring = screen.getByRole('button', { name: /turn the ring/i })
     fireEvent.keyDown(stone, { key: ' ' })
     expect(stone).toHaveClass('is-active')
+    expect(stone).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(/the stone is awake/i)).toBeVisible()
     ring.focus()
     fireEvent.keyDown(ring, { key: 'Enter' })
     expect(ring).toHaveClass('is-active')
+    expect(ring).toHaveAttribute('aria-pressed', 'true')
+    expect(stone).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByText(/the ring is turning/i)).toBeVisible()
+    await user.click(ring)
+    expect(ring).toHaveAttribute('aria-pressed', 'false')
   })
 })

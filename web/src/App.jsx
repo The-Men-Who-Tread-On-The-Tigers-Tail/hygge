@@ -31,37 +31,49 @@ function CameraDrift({ pointer }) {
 
 function InteractiveForms({ activeObject, onObjectActivate }) {
   const group = useRef(null)
-  const pulse = useRef(0)
-  useEffect(() => { pulse.current = activeObject ? 1 : 0 }, [activeObject])
+  const stone = useRef(null)
+  const ring = useRef(null)
+
   useFrame((_, delta) => {
     if (!group.current) return
-    group.current.rotation.y += delta * 0.018
-    if (pulse.current > 0) {
-      group.current.scale.setScalar(1 + pulse.current * 0.035)
-      pulse.current = Math.max(0, pulse.current - delta * 2.5)
-    } else group.current.scale.setScalar(1)
+    group.current.rotation.y += delta * 0.025
+
+    const animate = (mesh, active, spin) => {
+      if (!mesh.current) return
+      const scale = active ? 1.2 : 1
+      mesh.current.scale.x += (scale - mesh.current.scale.x) * Math.min(delta * 8, 1)
+      mesh.current.scale.y += (scale - mesh.current.scale.y) * Math.min(delta * 8, 1)
+      mesh.current.scale.z += (scale - mesh.current.scale.z) * Math.min(delta * 8, 1)
+      mesh.current.rotation.y += delta * (active ? spin : 0.08)
+    }
+
+    animate(stone, activeObject === 'stone', 1.4)
+    animate(ring, activeObject === 'ring', -1.8)
   })
+
   return (
     <group ref={group}>
       <mesh
+        ref={stone}
         name="stone"
-        position={[-1.8, 0.8, -1]}
+        position={[-1.9, 0.9, -1]}
         onPointerOver={(event) => { event.stopPropagation(); document.body.style.cursor = 'pointer' }}
         onPointerOut={() => { document.body.style.cursor = '' }}
         onClick={() => onObjectActivate('stone')}
       >
-        <icosahedronGeometry args={[1.4, 1]} />
-        <meshStandardMaterial color={activeObject === 'stone' ? '#8daa96' : '#b9cdbd'} roughness={0.78} />
+        <icosahedronGeometry args={[1.55, 1]} />
+        <meshStandardMaterial color={activeObject === 'stone' ? '#3f8f6a' : '#8cb9a0'} emissive={activeObject === 'stone' ? '#174c35' : '#000000'} emissiveIntensity={activeObject === 'stone' ? 0.45 : 0} roughness={0.58} metalness={0.12} />
       </mesh>
       <mesh
+        ref={ring}
         name="ring"
-        position={[2, -0.8, -0.5]}
+        position={[2.1, -0.9, -0.5]}
         onPointerOver={(event) => { event.stopPropagation(); document.body.style.cursor = 'pointer' }}
         onPointerOut={() => { document.body.style.cursor = '' }}
         onClick={() => onObjectActivate('ring')}
       >
-        <torusGeometry args={[1.1, 0.28, 12, 32]} />
-        <meshStandardMaterial color={activeObject === 'ring' ? '#c28d67' : '#d6b18f'} roughness={0.72} />
+        <torusGeometry args={[1.25, 0.34, 16, 48]} />
+        <meshStandardMaterial color={activeObject === 'ring' ? '#d56a2a' : '#d69b6f'} emissive={activeObject === 'ring' ? '#6f260c' : '#000000'} emissiveIntensity={activeObject === 'ring' ? 0.45 : 0} roughness={0.46} metalness={0.28} />
       </mesh>
     </group>
   )
@@ -106,8 +118,7 @@ export default function App() {
   }, [])
 
   const activateObject = (name) => {
-    setActiveObject(name)
-    window.setTimeout(() => setActiveObject((current) => current === name ? null : current), 360)
+    setActiveObject((current) => current === name ? null : name)
   }
 
   const updatePointer = (event) => {
@@ -134,9 +145,10 @@ export default function App() {
         </div>
         <div className="controls" aria-label="Scene controls">
           <button type="button" onClick={() => setQuestion(nextQuestion(question))}>Another question</button>
-          <button type="button" className={activeObject === 'stone' ? 'object-control is-active' : 'object-control'} onClick={() => activateObject('stone')} onKeyDown={(event) => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); activateObject('stone') } }}>Wake the stone</button>
-          <button type="button" className={activeObject === 'ring' ? 'object-control is-active' : 'object-control'} onClick={() => activateObject('ring')} onKeyDown={(event) => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); activateObject('ring') } }}>Turn the ring</button>
+          <button type="button" className={activeObject === 'stone' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'stone'} onClick={() => activateObject('stone')} onKeyDown={(event) => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); activateObject('stone') } }}>Wake the stone</button>
+          <button type="button" className={activeObject === 'ring' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'ring'} onClick={() => activateObject('ring')} onKeyDown={(event) => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); activateObject('ring') } }}>Turn the ring</button>
         </div>
+        <p className="scene-status" aria-live="polite">{activeObject === 'stone' ? 'The stone is awake — click it again to let it rest.' : activeObject === 'ring' ? 'The ring is turning — click it again to let it rest.' : 'Choose an object to bring the scene to life.'}</p>
       </section>
     </main>
   )

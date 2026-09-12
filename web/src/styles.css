@@ -21,8 +21,8 @@ button { font: inherit; }
   background: radial-gradient(circle at top, #fffaf1 0, #f4efe6 58%, #e8dfd0 100%);
 }
 
-.ambient-scene, .scene-fallback { position: absolute; inset: 0; z-index: -1; }
-.ambient-scene canvas { display: block; width: 100% !important; height: 100% !important; opacity: 0.72; }
+.ambient-scene, .scene-fallback { position: absolute; inset: 0; z-index: 0; }
+.ambient-scene canvas { display: block; width: 100% !important; height: 100% !important; opacity: 1; }
 .scene-fallback {
   background: radial-gradient(circle at 18% 22%, rgba(185, 205, 189, .62) 0 10%, transparent 32%), radial-gradient(circle at 84% 76%, rgba(214, 177, 143, .48) 0 8%, transparent 30%), linear-gradient(135deg, #fffaf1, #f1e7d8 58%, #e4d9c9);
 }
@@ -51,6 +51,7 @@ button { margin-top: 2rem; padding: .85rem 1.25rem; color: #fffaf1; background: 
 button:hover, button.is-active { background: #3f5b4a; transform: translateY(-1px); }
 button.object-control { margin-top: 2rem; padding-inline: 1rem; color: #3f5b4a; background: rgba(255, 252, 246, .72); border: 1px solid #9aaf9d; }
 button.object-control:hover, button.object-control.is-active { color: #fffaf1; background: #52705e; }
+.scene-status { min-height: 1.5rem; margin: 1.25rem 0 0; color: #526158; font-family: system-ui, sans-serif; font-size: .85rem; line-height: 1.5; }
 button:focus-visible { outline: 3px solid #9b5c31; outline-offset: 3px; }
 
 @media (max-width: 640px) {
