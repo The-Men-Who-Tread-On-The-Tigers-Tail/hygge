@@ -129,7 +129,7 @@ export default function App() {
 
   return (
     <main
-      className="app-shell"
+      className={`app-shell${activeObject ? ` scene-${activeObject}` : ''}`}
       onPointerMove={reducedMotion ? undefined : updatePointer}
       onPointerLeave={reducedMotion ? undefined : () => setPointer({ x: 0, y: 0 })}
       style={{ '--card-tilt-x': `${pointer.y * -5}deg`, '--card-tilt-y': `${pointer.x * 5}deg`, '--card-shift-x': `${pointer.x * 16}px`, '--card-shift-y': `${pointer.y * 16}px` }}
@@ -145,8 +145,8 @@ export default function App() {
         </div>
         <div className="controls" aria-label="Scene controls">
           <button type="button" onClick={() => setQuestion(nextQuestion(question))}>Another question</button>
-          <button type="button" className={activeObject === 'stone' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'stone'} onClick={() => activateObject('stone')} onKeyDown={(event) => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); activateObject('stone') } }}>Wake the stone</button>
-          <button type="button" className={activeObject === 'ring' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'ring'} onClick={() => activateObject('ring')} onKeyDown={(event) => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); activateObject('ring') } }}>Turn the ring</button>
+          <button type="button" className={activeObject === 'stone' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'stone'} onClick={() => activateObject('stone')}>Wake the stone</button>
+          <button type="button" className={activeObject === 'ring' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'ring'} onClick={() => activateObject('ring')}>Turn the ring</button>
         </div>
         <p className="scene-status" aria-live="polite">{activeObject === 'stone' ? 'The stone is awake — click it again to let it rest.' : activeObject === 'ring' ? 'The ring is turning — click it again to let it rest.' : 'Choose an object to bring the scene to life.'}</p>
       </section>

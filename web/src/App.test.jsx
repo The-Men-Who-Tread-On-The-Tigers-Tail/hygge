@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
@@ -76,12 +76,13 @@ describe('Hygge web interface', () => {
     render(<App />)
     const stone = screen.getByRole('button', { name: /wake the stone/i })
     const ring = screen.getByRole('button', { name: /turn the ring/i })
-    fireEvent.keyDown(stone, { key: ' ' })
+    stone.focus()
+    await user.keyboard('{Enter}')
     expect(stone).toHaveClass('is-active')
     expect(stone).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText(/the stone is awake/i)).toBeVisible()
     ring.focus()
-    fireEvent.keyDown(ring, { key: 'Enter' })
+    await user.keyboard('{Enter}')
     expect(ring).toHaveClass('is-active')
     expect(ring).toHaveAttribute('aria-pressed', 'true')
     expect(stone).toHaveAttribute('aria-pressed', 'false')

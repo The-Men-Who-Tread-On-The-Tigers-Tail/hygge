@@ -39,8 +39,12 @@ button { font: inherit; }
   border: 1px solid #e4d8c7;
   border-radius: 1.25rem;
   box-shadow: 0 1.5rem 4rem rgba(67, 57, 42, .14), 0 .25rem 0 rgba(255, 255, 255, .7) inset;
-  transition: transform 240ms ease, box-shadow 240ms ease;
+  transition: transform 240ms ease, box-shadow 240ms ease, background 240ms ease;
 }
+.app-shell.scene-stone .question-card { background: rgba(240, 255, 244, .94); box-shadow: 0 1.5rem 4rem rgba(35, 117, 73, .28), 0 0 0 2px rgba(79, 168, 109, .55); }
+.app-shell.scene-ring .question-card { background: rgba(255, 247, 238, .94); box-shadow: 0 1.5rem 4rem rgba(192, 83, 30, .28), 0 0 0 2px rgba(218, 120, 65, .55); }
+.app-shell.scene-stone .scene-fallback { background: radial-gradient(circle at 18% 22%, rgba(63, 143, 106, .85) 0 13%, transparent 36%), linear-gradient(135deg, #ecfff2, #dcefe2); }
+.app-shell.scene-ring .scene-fallback { background: radial-gradient(circle at 84% 76%, rgba(213, 106, 42, .85) 0 13%, transparent 36%), linear-gradient(135deg, #fff5ed, #f2dfd0); }
 .eyebrow, .question-label { margin: 0; color: #8c5a3b; font-family: system-ui, sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 h1 { margin: .65rem 0 .5rem; font-size: clamp(3rem, 12vw, 5rem); font-weight: 400; line-height: 1; }
 .intro { margin: 0 auto 2.5rem; max-width: 24rem; color: #526158; font-size: 1.05rem; line-height: 1.6; }
