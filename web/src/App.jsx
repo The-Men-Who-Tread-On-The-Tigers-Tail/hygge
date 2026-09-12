@@ -29,7 +29,7 @@ function CameraDrift({ pointer }) {
   return null
 }
 
-function InteractiveForms({ activeObject, onObjectActivate }) {
+function InteractiveForms({ activeObject }) {
   const group = useRef(null)
   const stone = useRef(null)
   const ring = useRef(null)
@@ -57,9 +57,6 @@ function InteractiveForms({ activeObject, onObjectActivate }) {
         ref={stone}
         name="stone"
         position={[-1.9, 0.9, -1]}
-        onPointerOver={(event) => { event.stopPropagation(); document.body.style.cursor = 'pointer' }}
-        onPointerOut={() => { document.body.style.cursor = '' }}
-        onClick={() => onObjectActivate('stone')}
       >
         <icosahedronGeometry args={[1.55, 1]} />
         <meshStandardMaterial color={activeObject === 'stone' ? '#3f8f6a' : '#8cb9a0'} emissive={activeObject === 'stone' ? '#174c35' : '#000000'} emissiveIntensity={activeObject === 'stone' ? 0.45 : 0} roughness={0.58} metalness={0.12} />
@@ -68,9 +65,6 @@ function InteractiveForms({ activeObject, onObjectActivate }) {
         ref={ring}
         name="ring"
         position={[2.1, -0.9, -0.5]}
-        onPointerOver={(event) => { event.stopPropagation(); document.body.style.cursor = 'pointer' }}
-        onPointerOut={() => { document.body.style.cursor = '' }}
-        onClick={() => onObjectActivate('ring')}
       >
         <torusGeometry args={[1.25, 0.34, 16, 48]} />
         <meshStandardMaterial color={activeObject === 'ring' ? '#d56a2a' : '#d69b6f'} emissive={activeObject === 'ring' ? '#6f260c' : '#000000'} emissiveIntensity={activeObject === 'ring' ? 0.45 : 0} roughness={0.46} metalness={0.28} />
@@ -79,14 +73,14 @@ function InteractiveForms({ activeObject, onObjectActivate }) {
   )
 }
 
-function AmbientScene({ activeObject, pointer, onObjectActivate }) {
+function AmbientScene({ activeObject, pointer }) {
   return (
     <div className="ambient-scene" data-testid="ambient-scene" aria-hidden="true">
       <Canvas camera={{ position: [0, 0, 7], fov: 42 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }}>
         <ambientLight intensity={1.4} />
         <directionalLight position={[3, 4, 5]} intensity={1.6} />
         <CameraDrift pointer={pointer} />
-        <InteractiveForms activeObject={activeObject} onObjectActivate={onObjectActivate} />
+        <InteractiveForms activeObject={activeObject} />
       </Canvas>
     </div>
   )
@@ -117,8 +111,9 @@ export default function App() {
     return () => query.removeEventListener?.('change', update)
   }, [])
 
-  const activateObject = (name) => {
-    setActiveObject((current) => current === name ? null : name)
+  const advanceQuestion = () => {
+    setQuestion(nextQuestion(question))
+    setActiveObject((current) => current === 'stone' ? 'ring' : 'stone')
   }
 
   const updatePointer = (event) => {
@@ -134,7 +129,7 @@ export default function App() {
       onPointerLeave={reducedMotion ? undefined : () => setPointer({ x: 0, y: 0 })}
       style={{ '--card-tilt-x': `${pointer.y * -5}deg`, '--card-tilt-y': `${pointer.x * 5}deg`, '--card-shift-x': `${pointer.x * 16}px`, '--card-shift-y': `${pointer.y * 16}px` }}
     >
-      {fallback ? <StaticFallback /> : <SceneBoundary><AmbientScene activeObject={activeObject} pointer={pointer} onObjectActivate={activateObject} /></SceneBoundary>}
+      {fallback ? <StaticFallback /> : <SceneBoundary><AmbientScene activeObject={activeObject} pointer={pointer} /></SceneBoundary>}
       <section className="question-card" aria-labelledby="app-title">
         <p className="eyebrow">A moment for yourself</p>
         <h1 id="app-title">Hygge</h1>
@@ -143,12 +138,10 @@ export default function App() {
           <p className="question-label">Reflect on this</p>
           <h2>{question}</h2>
         </div>
-        <div className="controls" aria-label="Scene controls">
-          <button type="button" onClick={() => setQuestion(nextQuestion(question))}>Another question</button>
-          <button type="button" className={activeObject === 'stone' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'stone'} onClick={() => activateObject('stone')}>Wake the stone</button>
-          <button type="button" className={activeObject === 'ring' ? 'object-control is-active' : 'object-control'} aria-pressed={activeObject === 'ring'} onClick={() => activateObject('ring')}>Turn the ring</button>
+        <div className="controls">
+          <button type="button" onClick={advanceQuestion}>Another question</button>
         </div>
-        <p className="scene-status" aria-live="polite">{activeObject === 'stone' ? 'The stone is awake — click it again to let it rest.' : activeObject === 'ring' ? 'The ring is turning — click it again to let it rest.' : 'Choose an object to bring the scene to life.'}</p>
+        <p className="scene-status" aria-live="polite">{activeObject === 'stone' ? 'A green stone pulse accompanies this question.' : activeObject === 'ring' ? 'A warm ring motion accompanies this question.' : 'The next question will bring the scene to life.'}</p>
       </section>
     </main>
   )
