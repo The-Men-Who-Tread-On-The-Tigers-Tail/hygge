@@ -51,3 +51,7 @@ cd web
 npm test
 npm run build
 ```
+
+## Support
+
+If Hygge is useful to you, you can support my work at [Buy Me a Coffee](https://buymeacoffee.com/menwhotreadontigerstail).
