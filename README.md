@@ -1,5 +1,7 @@
 # hygge
 
+Hygge is licensed under the [MIT License](LICENSE), Copyright (c) 2026 The Men Who Tread On The Tiger’s Tail.
+
 `hygge` is a small Rust CLI that prints one reflective question from a seeded local SQLite database.
 
 On first run, the app initializes its local SQLite database automatically. Set `HYGGE_DB_PATH` to override the default database location.
@@ -40,7 +42,7 @@ From the repository root:
 
 ```sh
 cd web
-npm install
+npm ci
 npm run dev
 ```
 
@@ -48,6 +50,20 @@ Open the local URL printed by Vite. To run the frontend test and production buil
 
 ```sh
 cd web
+npm test
+npm run build
+```
+
+`npm ci` installs exactly the dependencies recorded in `web/package-lock.json`; `web/package.json` is private and is not intended for npm publication.
+
+For a complete verification from the repository root:
+
+```sh
+cargo fmt --check
+cargo test
+cargo clippy --all-targets --all-features -- -D warnings
+cd web
+npm ci
 npm test
 npm run build
 ```

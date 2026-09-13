@@ -1,2 +1,23 @@
 /target
 /.worktrees/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# OS noise and generated frontend output
+.DS_Store
+web/node_modules/
+web/dist/
