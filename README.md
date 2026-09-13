@@ -54,7 +54,7 @@ npm test
 npm run build
 ```
 
-`npm ci` installs exactly the dependencies recorded in `web/package-lock.json`; `web/package.json` is private and is not intended for npm publication.
+`npm ci` installs exactly the dependencies recorded in `web/package-lock.json`; `web/package.json` is private and is not intended for npm publication. See [`docs/releasing.md`](docs/releasing.md) for the separate source-release process.
 
 For a complete verification from the repository root:
 
