@@ -70,4 +70,6 @@ npm run build
 
 ## Support
 
-If Hygge is useful to you, you can support my work at [Buy Me a Coffee](https://buymeacoffee.com/menwhotreadontigerstail).
+If Hygge is useful to you, you can support my work:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/menwhotreadontigerstail)
