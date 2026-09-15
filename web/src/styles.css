@@ -19,7 +19,7 @@ button { font: inherit; }
 .intro { color: #657061; font-size: .95rem; line-height: 1.4; margin: 0 0 clamp(1rem, 3svh, 2rem); }
 .question-panel { border-top: 1px solid #d9ddcf; padding-top: clamp(1rem, 3svh, 1.8rem); }
 .question-label { margin: 0 0 .8rem; font-size: .69rem; text-transform: uppercase; letter-spacing: .14em; color: #66715f; font-weight: 600; }
-.question-panel h2 { font-size: clamp(1.4rem, 2.15vw, 2rem); line-height: 1.35; font-weight: 500; letter-spacing: -.035em; margin: 0; text-wrap: pretty; overflow-wrap: break-word; }
+.question-panel h2 { font-size: clamp(1.4rem, 2.15vw, 2rem); line-height: 1.35; min-height: 2lh; font-weight: 500; letter-spacing: -.035em; margin: 0; text-wrap: pretty; overflow-wrap: break-word; }
 button { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; width: 100%; min-height: 2.75rem; padding: .85rem 1rem; margin-top: clamp(1rem, 3svh, 1.75rem); border: 1px solid #405942; border-radius: .5rem; background: #405942; color: #fffdf5; cursor: pointer; font-size: .85rem; font-weight: 500; transition: background 150ms ease; }
 button span { font-size: 1.2rem; line-height: 1; }
 button:hover { background: #2e4531; }
