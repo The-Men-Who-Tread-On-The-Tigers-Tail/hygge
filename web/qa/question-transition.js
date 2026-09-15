@@ -1,0 +1,32 @@
+async (page) => {
+  const checks = []
+  const check = (condition, label) => { if (!condition) throw new Error(label); checks.push(label) }
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('http://127.0.0.1:5178/')
+  const heading = page.getByRole('heading', { level: 2 })
+  const button = page.getByRole('button', { name: 'Another question' })
+  const animations = () => heading.evaluate((element) => element.getAnimations().length)
+  check(await animations() === 0, 'initial question does not animate')
+  await button.click()
+  check(await animations() === 1, 'new question starts one text transition')
+  check(await heading.textContent() === 'What small part of today helped you breathe more slowly?', 'text updates immediately')
+  check(await page.getByRole('heading', { level: 2 }).count() === 1, 'only one accessible question is present')
+  await button.press('Space')
+  check(await animations() === 1, 'rapid keyboard activation replaces rather than stacks transitions')
+  check(await button.evaluate((element) => element === document.activeElement), 'keyboard focus stays on primary action')
+  await page.waitForTimeout(500)
+  check(await animations() === 0, 'transition completes without a persistent animation')
+  check(await heading.evaluate((element) => getComputedStyle(element).opacity === '1'), 'settled question is fully opaque')
+  await button.click()
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.waitForTimeout(100)
+  check(await animations() === 0, 'live reduced-motion preference cancels active text motion')
+  await button.click()
+  check(await animations() === 0, 'reduced-motion questions change instantly')
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.waitForTimeout(50)
+  await button.press('Enter')
+  check(await animations() === 1, 'turning reduced motion off restores transitions')
+  await page.waitForTimeout(500)
+  return { passed: checks.length, checks }
+}

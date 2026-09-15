@@ -45,7 +45,7 @@ export default function App() {
 
   return (
     <main className="app-shell">
-      <QuestionOverlay question={question} onAdvance={advance} />
+      <QuestionOverlay question={question} onAdvance={advance} reducedMotion={reducedMotion} />
       <div className="world-panel">
         <div className="world-canvas" aria-hidden="true">
           {!available || sceneFailed ? <SceneFallback /> : (
