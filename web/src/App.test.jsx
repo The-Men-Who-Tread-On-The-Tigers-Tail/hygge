@@ -1,17 +1,18 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
-
 import '@testing-library/jest-dom/vitest'
 
-vi.mock('@react-three/fiber', () => ({
-  Canvas: ({ children }) => {
-    if (window.__hyggeCanvasError) throw new Error('WebGL initialization failed')
-    return <div data-testid="webgl-canvas">{children}</div>
+// Mock the GPU boundary, not Three primitives into the DOM. Actual geometry,
+// lighting and camera framing are checked in a real browser, not jsdom.
+const renderer = vi.hoisted(() => ({ fail: null, throwOnMount: false }))
+vi.mock('./scene/HyggeWorld', () => ({
+  default: ({ onFailure }) => {
+    if (renderer.throwOnMount) throw new Error('Renderer initialization failed')
+    renderer.fail = onFailure
+    return <div data-testid="webgl-canvas" />
   },
-  useFrame: () => {},
-  useThree: () => ({ camera: { position: { x: 0, y: 0 }, rotation: { z: 0 } } }),
 }))
 
 function setReducedMotion(reduced) {
@@ -23,64 +24,104 @@ function setReducedMotion(reduced) {
   }))
 }
 
-describe('Hygge web interface', () => {
-  beforeEach(() => {
-    cleanup()
-    window.__hyggeCanvasError = false
-    setReducedMotion(false)
-    HTMLCanvasElement.prototype.getContext = vi.fn(() => ({ getExtension: vi.fn() }))
+beforeEach(() => {
+  renderer.fail = null
+  renderer.throwOnMount = false
+  setReducedMotion(false)
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ getExtension: vi.fn() })
+})
+afterEach(() => { cleanup(); vi.restoreAllMocks() })
+
+const question = () => screen.getByRole('heading', { level: 2 })
+const advance = () => screen.getByRole('button', { name: /another question/i })
+
+async function renderWorld() {
+  render(<App />)
+  await screen.findByTestId('webgl-canvas')
+}
+
+describe('Hygge reading experience', () => {
+  it('advances the question with the single primary action', async () => {
+    const user = userEvent.setup()
+    await renderWorld()
+    expect(question()).toHaveTextContent('What small part of today felt most like home?')
+    await user.click(advance())
+    expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
+    expect(screen.getAllByRole('button')).toHaveLength(1)
   })
 
-  it('advances the displayed question when Another question is activated', async () => {
+  it('keeps Another question focused and activatable with Enter', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    const firstQuestion = screen.getByRole('heading', { level: 2 }).textContent
-    await user.click(screen.getByRole('button', { name: /another question/i }))
-    expect(screen.getByRole('heading', { level: 2 })).not.toHaveTextContent(firstQuestion)
-  })
-
-  it('keeps Another question keyboard-focusable and activatable', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    const button = screen.getByRole('button', { name: /another question/i })
-    const firstQuestion = screen.getByRole('heading', { level: 2 }).textContent
-    button.focus()
-    expect(button).toHaveFocus()
+    await renderWorld()
+    advance().focus()
     await user.keyboard('{Enter}')
-    expect(screen.getByRole('heading', { level: 2 })).not.toHaveTextContent(firstQuestion)
+    expect(advance()).toHaveFocus()
+    expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
   })
 
-  it('renders the static fallback without an animated canvas for reduced motion', () => {
+  it('announces the question itself and preserves focus after Space activation', async () => {
+    const user = userEvent.setup()
+    await renderWorld()
+    advance().focus()
+    await user.keyboard(' ')
+    expect(advance()).toHaveFocus()
+    expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
+    expect(question().closest('[aria-live="polite"]')).not.toBeNull()
+  })
+
+  it('cycles through the existing questions without dropping rapid activations', async () => {
+    await renderWorld()
+    act(() => { for (let i = 0; i < 9; i += 1) advance().click() })
+    expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
+  })
+
+  it('keeps the stationary room visible for reduced motion', async () => {
     setReducedMotion(true)
-    render(<App />)
-    expect(screen.getByTestId('scene-fallback')).toBeVisible()
-    expect(screen.queryByTestId('ambient-scene')).not.toBeInTheDocument()
+    await renderWorld()
+    expect(screen.queryByTestId('scene-fallback')).not.toBeInTheDocument()
   })
 
-  it('renders the static fallback when WebGL is unavailable', () => {
-    HTMLCanvasElement.prototype.getContext = vi.fn(() => null)
-    render(<App />)
-    expect(screen.getByTestId('scene-fallback')).toBeVisible()
-    expect(screen.queryByTestId('ambient-scene')).not.toBeInTheDocument()
-  })
-
-  it('renders the static fallback when WebGL initialization fails', () => {
-    window.__hyggeCanvasError = true
+  it('keeps reading and advancement available without WebGL', async () => {
+    HTMLCanvasElement.prototype.getContext.mockReturnValue(null)
+    const user = userEvent.setup()
     render(<App />)
     expect(screen.getByTestId('scene-fallback')).toBeVisible()
     expect(screen.queryByTestId('webgl-canvas')).not.toBeInTheDocument()
+    await user.click(advance())
+    expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
   })
 
-  it('cycles the scene effect when Another question is activated', async () => {
+  it('keeps the UI available when renderer initialization throws', async () => {
+    renderer.throwOnMount = true
+    vi.spyOn(console, 'error').mockImplementation(() => {})
     const user = userEvent.setup()
     render(<App />)
-    const button = screen.getByRole('button', { name: /another question/i })
-    expect(screen.getByText(/next question will bring the scene to life/i)).toBeVisible()
-    await user.click(button)
-    expect(screen.getByText(/green stone pulse/i)).toBeVisible()
-    await user.click(button)
-    expect(screen.getByText(/warm ring motion/i)).toBeVisible()
-    expect(screen.queryByRole('button', { name: /wake the stone/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /turn the ring/i })).not.toBeInTheDocument()
+    expect(await screen.findByTestId('scene-fallback')).toBeVisible()
+    await user.click(advance())
+    expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
+  })
+
+  it('retains the question and focus if the renderer fails after advancement', async () => {
+    const user = userEvent.setup()
+    await renderWorld()
+    await user.click(advance())
+    act(() => renderer.fail())
+    expect(screen.getByTestId('scene-fallback')).toBeVisible()
+    expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
+    expect(advance()).toHaveFocus()
+    await user.click(advance())
+    expect(question()).toHaveTextContent('What small part of today made the room feel warmer?')
+    expect(screen.queryByTestId('webgl-canvas')).not.toBeInTheDocument()
+  })
+
+  it('probes WebGL 2 once rather than on every question update and releases the probe', async () => {
+    const loseContext = vi.fn()
+    HTMLCanvasElement.prototype.getContext.mockReturnValue({ getExtension: () => ({ loseContext }) })
+    const user = userEvent.setup()
+    await renderWorld()
+    await user.click(advance())
+    await user.click(advance())
+    expect(HTMLCanvasElement.prototype.getContext).toHaveBeenCalledExactlyOnceWith('webgl2')
+    expect(loseContext).toHaveBeenCalledTimes(1)
   })
 })
