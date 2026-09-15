@@ -1,0 +1,165 @@
+{
+  "passedViewports": 20,
+  "results": [
+    {
+      "width": 1440,
+      "height": 900,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 55.713564109959606,
+      "samples": 106
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 48.96713959020823,
+      "samples": 106
+    },
+    {
+      "width": 1024,
+      "height": 600,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 39.34781965584676,
+      "samples": 106
+    },
+    {
+      "width": 900,
+      "height": 500,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 29.41706616034302,
+      "samples": 107
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 27.056469991159926,
+      "samples": 106
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 27.417496557552607,
+      "samples": 106
+    },
+    {
+      "width": 600,
+      "height": 600,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 20.09267129159768,
+      "samples": 106
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 22.478245055094664,
+      "samples": 106
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 20.804761351789743,
+      "samples": 106
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 19.863936192945403,
+      "samples": 107
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 16.21394900110912,
+      "samples": 106
+    },
+    {
+      "width": 320,
+      "height": 480,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 14.910533128210192,
+      "samples": 106
+    },
+    {
+      "width": 500,
+      "height": 500,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 16.60473249018959,
+      "samples": 106
+    },
+    {
+      "width": 600,
+      "height": 450,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 14.455659293537895,
+      "samples": 107
+    },
+    {
+      "width": 1200,
+      "height": 400,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 28.622972638290538,
+      "samples": 106
+    },
+    {
+      "width": 421,
+      "height": 500,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 16.330689615029964,
+      "samples": 106
+    },
+    {
+      "width": 450,
+      "height": 500,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 16.39830912967485,
+      "samples": 106
+    },
+    {
+      "width": 600,
+      "height": 500,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 17.98355465079842,
+      "samples": 106
+    },
+    {
+      "width": 601,
+      "height": 500,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 18.845881489618574,
+      "samples": 107
+    },
+    {
+      "width": 420,
+      "height": 501,
+      "fits": true,
+      "unobstructed": true,
+      "maximumTravelPx": 13.134537211143712,
+      "samples": 106
+    }
+  ]
+}

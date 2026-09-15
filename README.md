@@ -66,7 +66,7 @@ npx --yes --package @playwright/cli playwright-cli -s=hygge-room run-code --file
 npx --yes --package @playwright/cli playwright-cli -s=hygge-room close
 ```
 
-Run `--filename=qa/motion-smoke.js` for real-renderer camera/card checks, rapid restarts, idle rendering, keyboard/touch activation, and live reduced-motion changes. Its scene inspection targets the Vite development server.
+Run `--filename=qa/motion-smoke.js` for real-renderer camera/card checks, rapid restarts, idle rendering, keyboard/touch activation, and live reduced-motion changes. Its scene inspection targets the Vite development server. Run `--filename=qa/card-visibility.js` to verify projected card bounds, center occlusion and screen-space movement during repeated restarts across the viewport matrix.
 
 For the height/width regression matrix, run the same `run-code` command with `--filename=qa/layout-fit.js`. It checks all eight questions at 20 viewport sizes for scroll overflow and visible controls without content clipping. Extreme zoom may still scroll to preserve text readability.
 

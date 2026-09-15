@@ -12,6 +12,8 @@
 - 16 unit tests pass; production build succeeds.
 - 27 motion checks and 28 existing browser smoke checks pass in Chromium 152.0.7977.83.
 - All eight questions fit at 20 tested viewport sizes.
+- Added `qa/card-visibility.js` after spec review identified a projection-evidence gap: projected mesh bounds stay inside the canvas and the card center stays unoccluded during repeated mid-flight restarts at all 20 viewport sizes. Measured screen-space travel exceeds 13 pixels in each tested size; this is objective visibility evidence, not user taste approval.
+- Independent motion standards review found no actionable issues; spec review found no concrete missing/wrong behavior or scope creep.
 - Real GPU scene transforms and idle renderer frames checked, not just mocked DOM elements.
 - Desktop, mobile and short-landscape screenshots visually inspected; room remains unobstructed.
 - `room-motion.webm` records actual mouse parallax and mouse/keyboard card dealing.
