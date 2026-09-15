@@ -42,7 +42,7 @@ export function TrailingIvy() {
   }, [])
   useEffect(() => () => [leaf, veins, ...stems].forEach((geometry) => geometry.dispose()), [leaf, veins, stems])
   return <group name="two-rooted-heart-leaf-ivy-runners">
-    <Cylinder position={[0, 0.207, 0]} radius={0.13} height={0.009} color={p.oakDark} segments={16} />
+    <Cylinder position={[0, 0.223, 0]} radius={0.13} height={0.009} color={p.oakDark} segments={16} />
     {stems.map((geometry, i) => <mesh key={i} geometry={geometry} castShadow receiveShadow><PaintedMaterial color={p.darkGreen} roughness={1} /></mesh>)}
     {attachments.map(({ position, tilt, color }, i) => <group key={i} position={position} rotation={[0, i % 2 ? -0.12 : 0.12, tilt]}>
       <mesh geometry={leaf} castShadow receiveShadow={false}><PaintedMaterial color={color} side={DoubleSide} roughness={1} /></mesh>
