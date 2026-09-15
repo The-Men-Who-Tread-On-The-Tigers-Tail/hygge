@@ -69,7 +69,7 @@ button:focus-visible { outline: 3px solid #92633d; outline-offset: 5px; }
   .reading-note, .reading-footer { font-size: .7rem; }
   .world-caption { font-size: .6rem; gap: .4rem; padding: .5rem .6rem; bottom: .75rem; }
 }
-@media (max-width: 420px) and (max-height: 500px) {
+@media (max-width: 600px) and (max-height: 500px) {
   .app-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(100px, 1fr) auto; }
   .world-panel { grid-row: 1; }
   .reading-panel { grid-row: 2; padding: .65rem 1.2rem; }

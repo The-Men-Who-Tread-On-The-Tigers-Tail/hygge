@@ -4,6 +4,7 @@ async (page) => {
     [1440, 900], [1280, 720], [1024, 600], [900, 500], [844, 390],
     [768, 1024], [600, 600], [390, 844], [375, 667], [360, 640], [320, 568],
     [320, 480], [500, 500], [600, 450], [1200, 400],
+    [421, 500], [450, 500], [600, 500], [601, 500], [420, 501],
   ]
   const results = []
   for (const [width, height] of sizes) {
@@ -18,9 +19,10 @@ async (page) => {
         const button = document.querySelector('button').getBoundingClientRect()
         const panel = document.querySelector('.reading-panel').getBoundingClientRect()
         const scene = document.querySelector('.world-panel').getBoundingClientRect()
+        const caption = document.querySelector('.world-caption').getBoundingClientRect()
         return {
           overflow: Math.max(root.scrollHeight - innerHeight, root.scrollWidth - innerWidth),
-          visible: question.top >= 0 && button.bottom <= innerHeight + 1 && panel.bottom <= innerHeight + 1 && scene.height >= 100,
+          visible: question.top >= 0 && button.bottom <= innerHeight + 1 && panel.bottom <= innerHeight + 1 && scene.height >= 100 && caption.left >= scene.left - 1 && caption.right <= scene.right + 1,
           unclipped: ['main', '.reading-panel', '.reading-content'].every((selector) => !['hidden', 'clip'].includes(getComputedStyle(document.querySelector(selector)).overflowY)),
         }
       })

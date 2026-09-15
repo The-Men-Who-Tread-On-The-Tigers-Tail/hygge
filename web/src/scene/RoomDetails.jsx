@@ -58,9 +58,9 @@ function Vase({ position, color = p.ceramic, greenery = false }) {
   )
 }
 
-function Books({ position }) {
+function Books({ position, heightScale = 1 }) {
   return (
-    <group position={position}>
+    <group position={position} scale={[1, heightScale, 1]}>
       {[p.darkGreen, p.ceramic, p.terracotta, p.sage].map((color, i) => {
         const height = [0.42, 0.48, 0.38, 0.45][i]
         return (
@@ -94,7 +94,7 @@ function Sideboard() {
       <Box position={[-0.38, 0.69, 0.3]} size={[0.91, 0.7, 0.06]} color={p.oakLight} />
       <Cylinder position={[-0.08, 0.77, 0.35]} rotation={[Math.PI / 2, 0, 0]} radius={0.035} height={0.04} color={p.brass} segments={12} />
       <Box position={[0.49, 0.65, 0]} size={[0.69, 0.055, 0.58]} color={p.oak} />
-      <Books position={[0.26, 0.335, 0.08]} />
+      <Books position={[0.26, 0.335, 0.08]} heightScale={0.55} />
       <Box position={[0.48, 0.71, 0.06]} size={[0.46, 0.065, 0.34]} color={p.sage} />
       <Box position={[0.5, 0.765, 0.06]} size={[0.4, 0.045, 0.3]} color={p.ceramic} />
       <Vase position={[0.52, 1.145, 0]} color={p.terracotta} greenery />

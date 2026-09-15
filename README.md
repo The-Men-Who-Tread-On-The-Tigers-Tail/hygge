@@ -66,7 +66,7 @@ npx --yes --package @playwright/cli playwright-cli -s=hygge-room run-code --file
 npx --yes --package @playwright/cli playwright-cli -s=hygge-room close
 ```
 
-For the height/width regression matrix, run the same `run-code` command with `--filename=qa/layout-fit.js`. It checks all eight questions at 15 viewport sizes for scroll overflow and visible controls without content clipping. Extreme zoom may still scroll to preserve text readability.
+For the height/width regression matrix, run the same `run-code` command with `--filename=qa/layout-fit.js`. It checks all eight questions at 20 viewport sizes for scroll overflow and visible controls without content clipping. Extreme zoom may still scroll to preserve text readability.
 
 This optional command downloads Playwright CLI if needed and requires a compatible browser. The smoke script checks question controls, responsive layout, reduced motion, WebGL absence, and actual context loss. It does not measure visual quality or physical-device performance; inspect the room in the browser separately.
 
