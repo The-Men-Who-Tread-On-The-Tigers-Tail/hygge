@@ -1,0 +1,29 @@
+npm notice run hygge-web@0.1.0 test
+npm notice run vitest run
+
+ RUN  v5.0.0 /Volumes/home/lena/data/workspace/my/hygge.feat-3d-room-blockout/web
+
+
+ Test Files  2 passed (2)
+      Tests  16 passed (16)
+   Start at  03:22:56
+   Duration  1.80s (environment 33%, transform 32%, tests 29%, import 5%)
+
+npm notice run hygge-web@0.1.0 build
+npm notice run vite build
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 46 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                         0.53 kB │ gzip:   0.32 kB
+dist/assets/index-BE4xVwBr.css          4.73 kB │ gzip:   1.58 kB
+dist/assets/index-BjTUuHth.js         197.43 kB │ gzip:  62.72 kB
+dist/assets/HyggeWorld-dSoTrsdJ.js  1,148.26 kB │ gzip: 343.07 kB
+
+✓ built in 167ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
