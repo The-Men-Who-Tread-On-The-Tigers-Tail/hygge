@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { DoubleSide } from 'three'
 import { Box, Cylinder, Leaf } from './primitives'
 import { BlanketBasket, TeaTray } from './StoryDetails'
+import { ShelfCandle, WallClock } from './CottageAccents'
 import { palette as p, room, windowOpening as w } from './sceneConfig'
 
 function CurtainPanel({ x }) {
@@ -67,7 +68,9 @@ function Books({ position, heightScale = 1 }) {
         return (
           <group key={color} position={[i * 0.115, height / 2, 0]}>
             <Box size={[0.095, height, 0.24]} color={color} />
-            <Box position={[0, height / 2 - 0.08, 0.123]} size={[0.068, 0.014, 0.004]} color={p.oakLight} />
+            {[-1, 1].map((end) => <Box key={end} position={[0, end * (height / 2 - 0.055), 0.124]} size={[0.088, 0.018, 0.008]} color={p.oakLight} />)}
+            <Box position={[0, 0.035, 0.125]} size={[0.061, 0.098, 0.008]} color={p.ceramic} />
+            {[-0.012, 0.017].map((y) => <Box key={y} position={[0, 0.035 + y, 0.131]} size={[0.036, 0.007, 0.004]} color={p.oakDark} />)}
           </group>
         )
       })}
@@ -113,12 +116,14 @@ export default function RoomDetails() {
       </group>
       <Shelf position={[3.22, 2.88, room.back + 0.3]}>
         <Books position={[-0.53, 0, 0]} />
+        <ShelfCandle />
         <Vase position={[0.48, 0, 0]} />
       </Shelf>
       <Shelf position={[-room.width / 2 + 0.29, 3.45, -0.6]} rotation={[0, Math.PI / 2, 0]} width={1.45}>
         <Books position={[-0.46, 0, 0]} />
         <Vase position={[0.4, 0, 0]} color={p.terracotta} />
       </Shelf>
+      <WallClock />
       <Sideboard />
       <BlanketBasket />
     </group>

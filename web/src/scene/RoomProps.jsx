@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { DoubleSide, Shape } from 'three'
+import { CatmullRomCurve3, DoubleSide, Shape, Vector3 } from 'three'
 import { Box, Cylinder, Leaf } from './primitives'
 import { palette as p, placement } from './sceneConfig'
 import { PaintedMaterial } from './PaintedSurface'
@@ -34,7 +34,7 @@ function Table() {
   )
 }
 
-function Cushion({ width, height, depth, color = p.sage, ...props }) {
+function Cushion({ width, height, depth, color = p.sage, piping = false, ...props }) {
   const shape = useMemo(() => {
     const shape = new Shape()
     const x = width / 2 - 0.04
@@ -51,12 +51,19 @@ function Cushion({ width, height, depth, color = p.sage, ...props }) {
     shape.quadraticCurveTo(-x, -y, -x + r, -y)
     return shape
   }, [width, height])
+  const seams = useMemo(() => piping ? [-1, 1].map((side) => new CatmullRomCurve3(
+    shape.getSpacedPoints(64).slice(0, -1).map((point) => new Vector3(point.x * 0.96, point.y * 0.96, side * (depth / 2 + 0.002))), true,
+  )) : [], [shape, depth, piping])
   return (
     <group {...props}>
       <mesh position={[0, 0, -depth / 2 + 0.04]} castShadow receiveShadow>
         <extrudeGeometry args={[shape, { depth: depth - 0.08, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04, bevelSegments: 3, steps: 1, curveSegments: 6 }]} />
         <PaintedMaterial color={color} roughness={1} />
       </mesh>
+      {seams.map((curve, i) => <mesh key={i} castShadow>
+        <tubeGeometry args={[curve, 64, 0.006, 5, true]} />
+        <PaintedMaterial color="#a7b398" roughness={1} />
+      </mesh>)}
     </group>
   )
 }
@@ -70,8 +77,8 @@ function Chair({ position = placement.chair, name = 'chair' }) {
         <Cylinder key={`${x}-${z}`} position={[x, 0.365, z]} radius={0.065} bottom={0.045} height={0.695} color={p.oakDark} segments={12} />
       )))}
       <Box position={[0, 0.735, 0]} size={[1.36, 0.14, 1.02]} color={p.oak} />
-      <Cushion position={[0, 0.88, -0.04]} rotation={[-Math.PI / 2, 0, 0]} width={1.12} height={1.01} depth={0.24} />
-      <Cushion position={[0, 1.37, 0.43]} rotation={[0.14, 0, 0]} width={1.22} height={0.96} depth={0.26} />
+      <Cushion piping position={[0, 0.88, -0.04]} rotation={[-Math.PI / 2, 0, 0]} width={1.12} height={1.01} depth={0.24} />
+      <Cushion piping position={[0, 1.37, 0.43]} rotation={[0.14, 0, 0]} width={1.22} height={0.96} depth={0.26} />
       {[-0.64, 0.64].map((x) => (
         <group key={x}>
           {[-0.32, 0.34].map((z) => <Cylinder key={z} position={[x, 0.97, z]} radius={0.04} height={0.48} color={p.oak} segments={12} />)}

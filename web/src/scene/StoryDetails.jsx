@@ -3,6 +3,7 @@ import { Object3D, SphereGeometry } from 'three'
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js'
 import { Box, Cylinder, Leaf } from './primitives'
 import { PaintedMaterial } from './PaintedSurface'
+import { TrailingIvy } from './CottageAccents'
 import { palette as p, room, windowOpening as w } from './sceneConfig'
 
 // Merge repeated organic shapes per colour, rather than one draw call per petal.
@@ -90,8 +91,7 @@ export function WindowPlants() {
     <group position={[w.left + 0.1, w.bottom - 0.015, room.back + 0.37]}>
       <Cylinder position={[0, 0.11, 0]} radius={0.15} bottom={0.1} height={0.22} color="#819b88" segments={16} />
       <Ring position={[0, 0.21, 0]} radius={0.147} color="#b1bd9b" />
-      <Cluster color={p.darkGreen} shapes={Array.from({ length: 7 }, (_, i) => ({ position: [Math.sin(i * 1.2) * 0.09, 0.24 - i * 0.1, 0.06 + i * 0.035], scale: [0.07, 0.09, 0.033], tilt: (i % 2 ? 1 : -1) * 0.65 }))} />
-      <Cluster color="#8ba56f" shapes={Array.from({ length: 6 }, (_, i) => ({ position: [0.09 + Math.sin(i * 1.5) * 0.1, 0.27 - i * 0.078, 0.08 + i * 0.032], scale: [0.08, 0.065, 0.035], tilt: i * 0.7 }))} />
+      <TrailingIvy />
     </group>
   </group>
 }
