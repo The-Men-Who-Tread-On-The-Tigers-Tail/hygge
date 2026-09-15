@@ -2,13 +2,14 @@ async (page) => {
   const baseURL = 'http://127.0.0.1:5178/'
   const results = []
   const errors = []
-  page.on('pageerror', (error) => errors.push(error.message))
+  const collectError = (error) => errors.push(error.message)
+  page.on('pageerror', collectError)
   const check = (condition, label) => {
     if (!condition) throw new Error(label)
     results.push(label)
   }
   await page.goto(baseURL)
-  await page.locator('canvas').waitFor({ state: 'visible' })
+  await page.locator('canvas[data-scene-ready="true"]').waitFor({ state: 'visible' })
   const question = page.getByRole('heading', { level: 2 })
   const button = page.getByRole('button', { name: 'Another question' })
   check(await page.getByRole('button').count() === 1, 'one primary action')
@@ -64,25 +65,51 @@ async (page) => {
       }
     })
     const fallbackPage = await fallbackContext.newPage()
+    fallbackPage.on('pageerror', collectError)
     await fallbackPage.goto(baseURL)
     await fallbackPage.getByTestId('scene-fallback').waitFor({ state: 'visible' })
     await fallbackPage.getByRole('button', { name: 'Another question' }).click()
     check(await fallbackPage.getByRole('heading', { level: 2 }).textContent() === 'What small part of today helped you breathe more slowly?', 'no-WebGL fallback works on initial load')
   } finally { await fallbackContext.close() }
 
+  const initializationContext = await browser.newContext()
+  try {
+    await initializationContext.addInitScript(() => {
+      const original = HTMLCanvasElement.prototype.getContext
+      HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
+        if (kind === 'webgl2' && this.isConnected) {
+          window.__rendererAttempted = true
+          return null
+        }
+        return original.call(this, kind, ...args)
+      }
+    })
+    const initializationPage = await initializationContext.newPage()
+    initializationPage.on('pageerror', collectError)
+    await initializationPage.goto(baseURL)
+    await initializationPage.waitForFunction(() => window.__rendererAttempted === true)
+    await initializationPage.locator('canvas').waitFor({ state: 'detached', timeout: 3000 })
+    await initializationPage.getByTestId('scene-fallback').waitFor({ state: 'visible' })
+    await initializationPage.getByRole('button', { name: 'Another question' }).click()
+    check(await initializationPage.getByRole('heading', { level: 2 }).textContent() === 'What small part of today helped you breathe more slowly?', 'successful probe followed by renderer creation failure remains interactive')
+  } finally { await initializationContext.close() }
+
   const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
   try {
     const touchPage = await touchContext.newPage()
+    touchPage.on('pageerror', collectError)
     await touchPage.goto(baseURL)
-    await touchPage.locator('canvas').waitFor({ state: 'visible' })
+    await touchPage.locator('canvas[data-scene-ready="true"]').waitFor({ state: 'visible' })
     await touchPage.getByRole('button', { name: 'Another question' }).tap()
     check(await touchPage.getByRole('heading', { level: 2 }).textContent() === 'What small part of today helped you breathe more slowly?', 'touch tap advances question')
   } finally { await touchContext.close() }
 
-  check(errors.length === 0, 'no uncaught page errors')
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto(baseURL)
-  await page.locator('canvas').waitFor({ state: 'visible' })
+  await page.locator('canvas[data-scene-ready="true"]').waitFor({ state: 'visible' })
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+  check(errors.length === 0, 'no uncaught page errors across all contexts')
+  page.off('pageerror', collectError)
   return { browser: await browser.version(), passed: results.length, checks: results, errors }
 }
