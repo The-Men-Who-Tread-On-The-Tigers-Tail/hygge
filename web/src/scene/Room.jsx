@@ -1,7 +1,8 @@
 import React from 'react'
+import { DoubleSide, FrontSide } from 'three'
 import { Box, Cylinder, Leaf } from './primitives'
 import RoomDetails from './RoomDetails'
-import { palette as p, room, windowOpening as w } from './sceneConfig'
+import { ceilingHeight, palette as p, room, windowOpening as w } from './sceneConfig'
 
 function Window() {
   const center = (w.left + w.right) / 2
@@ -51,6 +52,19 @@ export default function Room() {
   return (
     <group name="room">
       <Garden />
+      {/* Interior-facing ceiling: invisible from the elevated camera above it,
+          but opaque to shadow rays from either side. Never hide the room with
+          a double-sided roof just to stop exterior light. */}
+      <mesh
+        name="interior-ceiling"
+        position={[floorCenter[0], ceilingHeight, floorCenter[2]]}
+        rotation={[Math.PI / 2, 0, 0]}
+        castShadow
+        receiveShadow
+      >
+        <planeGeometry args={[fullWidth, room.depth]} />
+        <meshStandardMaterial color={p.plaster} roughness={1} side={FrontSide} shadowSide={DoubleSide} />
+      </mesh>
       {/* Extend the shell past the camera: this is an interior, not a floating model. */}
       <Box position={[floorCenter[0], -0.13, floorCenter[2]]} size={[fullWidth, 0.24, room.depth]} color={p.oak} />
       {Array.from({ length: plankCount }, (_, i) => (

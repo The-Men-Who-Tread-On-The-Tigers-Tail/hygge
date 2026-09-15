@@ -15,4 +15,11 @@ export const cameraConfig = {
   fov: 43, target: [0, 1.55, -0.35], direction: [0.37, 0.27, 0.89],
   bounds: { min: [-3.25, -0.12, -2.95], max: [3.25, 4.05, 2.65] },
 }
-export const daylight = { position: [0.5, 7, -5.5], intensity: 3.1 }
+// The ceiling is independent of the tall framing shell; the camera is unchanged.
+export const ceilingHeight = 4.6
+export const daylight = {
+  position: [(windowOpening.left + windowOpening.right) / 2, (windowOpening.bottom + windowOpening.top) / 2, room.back + 0.22],
+  width: windowOpening.right - windowOpening.left,
+  height: windowOpening.top - windowOpening.bottom,
+  intensity: 4.5,
+}
