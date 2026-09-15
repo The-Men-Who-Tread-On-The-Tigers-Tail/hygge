@@ -60,11 +60,11 @@ function Cushion({ width, height, depth, color = p.sage, ...props }) {
   )
 }
 
-function Chair() {
+function Chair({ position = placement.chair, name = 'chair' }) {
   // Local -Z faces the table; the full upholstered back leans away from the seat.
-  const facing = Math.atan2(placement.chair[0] - placement.table[0], placement.chair[2] - placement.table[2])
+  const facing = Math.atan2(position[0] - placement.table[0], position[2] - placement.table[2])
   return (
-    <group name="chair" position={placement.chair} rotation={[0, facing, 0]}>
+    <group name={name} position={position} rotation={[0, facing, 0]}>
       {[-0.49, 0.49].flatMap((x) => [-0.37, 0.37].map((z) => (
         <Cylinder key={`${x}-${z}`} position={[x, 0.365, z]} radius={0.065} bottom={0.045} height={0.695} color={p.oakDark} segments={12} />
       )))}
@@ -124,6 +124,7 @@ export default function RoomProps() {
       </group>
       <Table />
       <Chair />
+      <Chair name="second-chair" position={[1.95, 0, 1.15]} />
       <Lamp />
       <Plant />
     </group>
