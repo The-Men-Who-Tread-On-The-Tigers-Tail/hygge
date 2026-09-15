@@ -1,5 +1,6 @@
 import React from 'react'
 import { Box, Cylinder, Leaf } from './primitives'
+import RoomDetails from './RoomDetails'
 import { palette as p, room, windowOpening as w } from './sceneConfig'
 
 function Window() {
@@ -64,6 +65,7 @@ export default function Room() {
       <Box position={[floorCenter[0], 0.13, room.back + 0.12]} size={[fullWidth, 0.22, 0.08]} color={p.trim} />
       <Box position={[-half + 0.12, 0.13, floorCenter[2]]} size={[0.08, 0.22, room.depth]} color={p.trim} />
       <Window />
+      <RoomDetails />
       <group name="wall-art" position={[-3.09, 2.35, -0.6]}>
         <Box size={[0.06, 1.05, 0.82]} color={p.oakDark} />
         <Box position={[0.04, 0, 0]} size={[0.02, 0.93, 0.7]} color={p.ceramic} />

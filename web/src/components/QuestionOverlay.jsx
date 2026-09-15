@@ -6,9 +6,7 @@ export default function QuestionOverlay({ question, onAdvance }) {
         <h1 id="app-title">Hygge</h1>
       </header>
       <div className="reading-content">
-        <p className="eyebrow"><span aria-hidden="true" /> A little room to breathe</p>
-        <p className="intro">Settle in. <br />Stay a little longer.</p>
-        <p className="invitation">A quiet space for a question, <br />and whatever comes to mind.</p>
+        <p className="intro">A little room to breathe.</p>
         <div className="question-panel" aria-live="polite" aria-atomic="true">
           <p className="question-label">Take a moment</p>
           <h2>{question}</h2>

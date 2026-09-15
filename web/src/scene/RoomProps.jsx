@@ -1,5 +1,5 @@
-import React from 'react'
-import { DoubleSide } from 'three'
+import React, { useMemo } from 'react'
+import { DoubleSide, Shape } from 'three'
 import { Box, Cylinder, Leaf } from './primitives'
 import { palette as p, placement } from './sceneConfig'
 
@@ -33,15 +33,51 @@ function Table() {
   )
 }
 
-function Chair() {
+function Cushion({ width, height, depth, color = p.sage, ...props }) {
+  const shape = useMemo(() => {
+    const shape = new Shape()
+    const x = width / 2 - 0.04
+    const y = height / 2 - 0.04
+    const r = Math.min(0.14, x / 2, y / 2)
+    shape.moveTo(-x + r, -y)
+    shape.lineTo(x - r, -y)
+    shape.quadraticCurveTo(x, -y, x, -y + r)
+    shape.lineTo(x, y - r)
+    shape.quadraticCurveTo(x, y, x - r, y)
+    shape.lineTo(-x + r, y)
+    shape.quadraticCurveTo(-x, y, -x, y - r)
+    shape.lineTo(-x, -y + r)
+    shape.quadraticCurveTo(-x, -y, -x + r, -y)
+    return shape
+  }, [width, height])
   return (
-    <group name="chair" position={placement.chair} rotation={[0, -0.6, 0]}>
-      <Box position={[0, 0.78, 0]} size={[0.87, 0.12, 0.85]} color={p.oak} />
-      <Box position={[0, 0.865, 0]} size={[0.79, 0.1, 0.74]} color={p.sage} />
-      {[-0.34, 0.34].flatMap((x) => [-0.31, 0.31].map((z) => <Box key={`${x}-${z}`} position={[x, 0.4, z]} size={[0.09, 0.76, 0.09]} color={p.oakDark} />))}
-      {[-0.36, 0.36].map((x) => <Box key={x} position={[x, 1.14, 0.36]} size={[0.09, 1.35, 0.09]} color={p.oak} />)}
-      <Box position={[0, 1.66, 0.36]} size={[0.82, 0.25, 0.1]} color={p.oakLight} />
-      {[-0.18, 0, 0.18].map((x) => <Box key={x} position={[x, 1.28, 0.36]} size={[0.045, 0.57, 0.065]} color={p.oak} />)}
+    <group {...props}>
+      <mesh position={[0, 0, -depth / 2 + 0.04]} castShadow receiveShadow>
+        <extrudeGeometry args={[shape, { depth: depth - 0.08, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04, bevelSegments: 3, steps: 1, curveSegments: 6 }]} />
+        <meshStandardMaterial color={color} roughness={1} />
+      </mesh>
+    </group>
+  )
+}
+
+function Chair() {
+  // Local -Z faces the table; the full upholstered back leans away from the seat.
+  const facing = Math.atan2(placement.chair[0] - placement.table[0], placement.chair[2] - placement.table[2])
+  return (
+    <group name="chair" position={placement.chair} rotation={[0, facing, 0]}>
+      {[-0.49, 0.49].flatMap((x) => [-0.37, 0.37].map((z) => (
+        <Cylinder key={`${x}-${z}`} position={[x, 0.365, z]} radius={0.065} bottom={0.045} height={0.695} color={p.oakDark} segments={12} />
+      )))}
+      <Box position={[0, 0.735, 0]} size={[1.36, 0.14, 1.02]} color={p.oak} />
+      <Cushion position={[0, 0.88, -0.04]} rotation={[-Math.PI / 2, 0, 0]} width={1.12} height={1.01} depth={0.24} />
+      <Cushion position={[0, 1.37, 0.43]} rotation={[0.14, 0, 0]} width={1.22} height={0.96} depth={0.26} />
+      {[-0.64, 0.64].map((x) => (
+        <group key={x}>
+          {[-0.32, 0.34].map((z) => <Cylinder key={z} position={[x, 0.97, z]} radius={0.04} height={0.48} color={p.oak} segments={12} />)}
+          <Cushion position={[x, 1.22, 0.03]} rotation={[-Math.PI / 2, 0, 0]} width={0.23} height={1.05} depth={0.21} />
+        </group>
+      ))}
+      <Cushion position={[0.13, 1.18, 0.23]} rotation={[0.12, 0, -0.13]} width={0.55} height={0.39} depth={0.2} color={p.ceramic} />
     </group>
   )
 }

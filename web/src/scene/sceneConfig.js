@@ -5,10 +5,10 @@ export const palette = {
   ceramic: '#f3e4c8', terracotta: '#bc795b', rug: '#c9c0a3', brass: '#a88749',
 }
 
-export const room = { width: 6.4, depth: 16, height: 7, back: -2.9, right: 12 }
+export const room = { width: 6.4, depth: 16, height: 12, back: -2.9, right: 12 }
 export const windowOpening = { left: -1.45, right: 1.75, bottom: 1.35, top: 3.45 }
 export const placement = {
-  table: [0.15, 0, 0.05], chair: [-1.25, 0, 1.25],
+  table: [0.15, 0, 0.05], chair: [-1.5, 0, 1.4],
   lamp: [2.3, 0, -1.45], plant: [-2.3, 0, -1.75],
 }
 export const cameraConfig = {
