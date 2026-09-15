@@ -1,10 +1,13 @@
-import { useLayoutEffect } from 'react'
-import { useThree } from '@react-three/fiber'
+import { useLayoutEffect, useRef } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
 import { MathUtils, Vector3 } from 'three'
 import { cameraConfig } from './sceneConfig'
+import { damp } from './motion'
 
-export default function CameraRig() {
+export default function CameraRig({ motion }) {
   const { camera, size, invalidate } = useThree()
+  const basePosition = useRef(new Vector3())
+  const offset = useRef({ x: 0, y: 0 })
 
   useLayoutEffect(() => {
     const aspect = size.width / Math.max(size.height, 1)
@@ -31,11 +34,27 @@ export default function CameraRig() {
     }
     camera.fov = cameraConfig.fov
     camera.aspect = aspect
-    camera.position.copy(target).addScaledVector(outward, distance * 1.035)
+    basePosition.current.copy(target).addScaledVector(outward, distance * 1.035)
+    camera.position.copy(basePosition.current)
+    offset.current = { x: 0, y: 0 }
     camera.lookAt(target)
     camera.updateProjectionMatrix()
     invalidate()
   }, [camera, size.width, size.height, invalidate])
+
+  useFrame((_, delta) => {
+    const { pointer, reducedMotion } = motion.current
+    const targetX = reducedMotion ? 0 : pointer.x * 0.24
+    const targetY = reducedMotion ? 0 : -pointer.y * 0.12
+    const x = reducedMotion ? 0 : damp(offset.current.x, targetX, Math.min(delta, 0.05))
+    const y = reducedMotion ? 0 : damp(offset.current.y, targetY, Math.min(delta, 0.05))
+    offset.current = { x, y }
+    camera.position.copy(basePosition.current)
+    camera.position.x += x
+    camera.position.y += y
+    camera.lookAt(...cameraConfig.target)
+    if (x !== targetX || y !== targetY) invalidate()
+  })
 
   return null
 }

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import QuestionOverlay from './components/QuestionOverlay'
 import SceneBoundary from './scene/SceneBoundary'
 import SceneFallback from './scene/SceneFallback'
@@ -23,20 +23,35 @@ function webglAvailable() {
 
 export default function App() {
   const [question, setQuestion] = useState(firstQuestion)
+  const [advanceSequence, setAdvanceSequence] = useState(0)
+  const [reducedMotion, setReducedMotion] = useState(() => Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches))
+
+  useEffect(() => {
+    const preference = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+    if (!preference) return undefined
+    const sync = () => setReducedMotion(preference.matches)
+    sync()
+    preference.addEventListener('change', sync)
+    return () => preference.removeEventListener('change', sync)
+  }, [])
+
+  const advance = useCallback(() => {
+    setQuestion(nextQuestion)
+    setAdvanceSequence((sequence) => sequence + 1)
+  }, [])
   const [available] = useState(webglAvailable)
   const [sceneFailed, setSceneFailed] = useState(false)
   const failScene = useCallback(() => setSceneFailed(true), [])
-  const advanceQuestion = () => setQuestion((current) => nextQuestion(current))
 
   return (
     <main className="app-shell">
-      <QuestionOverlay question={question} onAdvance={advanceQuestion} />
+      <QuestionOverlay question={question} onAdvance={advance} />
       <div className="world-panel">
         <div className="world-canvas" aria-hidden="true">
           {!available || sceneFailed ? <SceneFallback /> : (
             <SceneBoundary>
               <Suspense fallback={<SceneFallback />}>
-                <HyggeWorld onFailure={failScene} />
+                <HyggeWorld onFailure={failScene} advanceSequence={advanceSequence} reducedMotion={reducedMotion} />
               </Suspense>
             </SceneBoundary>
           )}

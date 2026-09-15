@@ -109,6 +109,7 @@ async (page) => {
   await page.goto(baseURL)
   await page.locator('canvas[data-scene-ready="true"]').waitFor({ state: 'visible' })
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+  if (errors.length) throw new Error(JSON.stringify(errors))
   check(errors.length === 0, 'no uncaught page errors across all contexts')
   page.off('pageerror', collectError)
   return { browser: await browser.version(), passed: results.length, checks: results, errors }

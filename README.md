@@ -38,9 +38,9 @@ cargo test
 
 The React interface lives in `web/` and uses the same built-in reflective question style as the CLI.
 
-The web frontend now includes a **3D room blockout**: a static, window-side interior rendered with React Three Fiber, alongside a stable HTML reading panel. On mobile the room sits above the questions. **Another question** remains the only primary action and supports keyboard activation. The room includes an upholstered armchair, curtains, wall shelves and a sideboard. The reading UI uses a native sans-serif font and adapts to both viewport width and height. The scene is deliberately stationary at this visual-review milestone; camera movement, card-dealing animation, and detailed material polish are not implemented yet.
+The web frontend now includes a **3D room**: a window-side interior rendered with React Three Fiber, alongside a stable HTML reading panel. On mobile the room sits above the questions. **Another question** remains the only primary action and supports keyboard activation. The room includes an upholstered armchair, curtains, wall shelves and a sideboard. The reading UI uses a native sans-serif font and adapts to both viewport width and height. A gentle, bounded camera shift follows a mouse over the room and recenters on leave; touch does not drag the camera. Each activation lifts and turns a card on the table while the HTML question updates immediately. Rapid activations keep every question advance and retarget the bounded deal without accumulating height. Detailed material polish remains a later step.
 
-Rendering is on demand, with no external models or textures. If WebGL 2 is unavailable or the renderer fails, a local room illustration replaces the scene without resetting the current question. The static 3D room is also used for reduced-motion preferences.
+Rendering is on demand, with no external models or textures. If WebGL 2 is unavailable or the renderer fails, a local room illustration replaces the scene without resetting the current question. Reduced-motion preferences disable both camera movement and dealing, including when the preference changes while the page is open; the furnished room stays visible. Rendering stops when pointer movement and dealing settle.
 
 From the repository root:
 
@@ -65,6 +65,8 @@ npx --yes --package @playwright/cli playwright-cli -s=hygge-room open http://127
 npx --yes --package @playwright/cli playwright-cli -s=hygge-room run-code --filename=qa/blockout-smoke.js
 npx --yes --package @playwright/cli playwright-cli -s=hygge-room close
 ```
+
+Run `--filename=qa/motion-smoke.js` for real-renderer camera/card checks, rapid restarts, idle rendering, keyboard/touch activation, and live reduced-motion changes. Its scene inspection targets the Vite development server.
 
 For the height/width regression matrix, run the same `run-code` command with `--filename=qa/layout-fit.js`. It checks all eight questions at 20 viewport sizes for scroll overflow and visible controls without content clipping. Extreme zoom may still scroll to preserve text readability.
 

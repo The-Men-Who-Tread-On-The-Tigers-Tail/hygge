@@ -8,10 +8,10 @@ import '@testing-library/jest-dom/vitest'
 // lighting and camera framing are checked in a real browser, not jsdom.
 const renderer = vi.hoisted(() => ({ fail: null, throwOnMount: false }))
 vi.mock('./scene/HyggeWorld', () => ({
-  default: ({ onFailure }) => {
+  default: ({ onFailure, advanceSequence, reducedMotion }) => {
     if (renderer.throwOnMount) throw new Error('Renderer initialization failed')
     renderer.fail = onFailure
-    return <div data-testid="webgl-canvas" />
+    return <div data-testid="webgl-canvas" data-sequence={advanceSequence} data-reduced-motion={String(reducedMotion)} />
   },
 }))
 
@@ -57,6 +57,29 @@ describe('Hygge reading experience', () => {
     await user.keyboard('{Enter}')
     expect(advance()).toHaveFocus()
     expect(question()).toHaveTextContent('What small part of today helped you breathe more slowly?')
+  })
+
+  it('requests a new deal on every question, including wrapped and rapid advances', async () => {
+    render(<App />)
+    const room = await screen.findByTestId('webgl-canvas')
+    expect(room).toHaveAttribute('data-sequence', '0')
+    expect(room).toHaveAttribute('data-reduced-motion', 'false')
+    const button = screen.getByRole('button', { name: /Another question/i })
+    act(() => { for (let i = 0; i < 10; i += 1) button.click() })
+    expect(room).toHaveAttribute('data-sequence', '10')
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('What small part of today made the room feel warmer?')
+  })
+
+  it('passes reduced motion through to the real scene without removing it', async () => {
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: query.includes('prefers-reduced-motion'), media: query,
+      addEventListener: vi.fn(), removeEventListener: vi.fn(),
+    }))
+    render(<App />)
+    const room = await screen.findByTestId('webgl-canvas')
+    expect(room).toHaveAttribute('data-reduced-motion', 'true')
+    act(() => advance().click())
+    expect(room).toHaveAttribute('data-sequence', '1')
   })
 
   it('announces the question itself and preserves focus after Space activation', async () => {
