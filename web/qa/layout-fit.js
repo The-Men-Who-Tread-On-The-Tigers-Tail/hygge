@@ -10,6 +10,8 @@ async (page) => {
   for (const [width, height] of sizes) {
     await page.setViewportSize({ width, height })
     let maximumOverflow = 0
+    let baseline
+    let maximumLayoutShift = 0
     let controlsInView = true
     let contentUnclipped = true
     for (let i = 0; i < 8; i += 1) {
@@ -21,21 +23,24 @@ async (page) => {
         const scene = document.querySelector('.world-panel').getBoundingClientRect()
         const caption = document.querySelector('.world-caption').getBoundingClientRect()
         return {
+          positions: [button.top, panel.top, scene.height, scene.width],
           overflow: Math.max(root.scrollHeight - innerHeight, root.scrollWidth - innerWidth),
           visible: question.top >= 0 && button.bottom <= innerHeight + 1 && panel.bottom <= innerHeight + 1 && scene.height >= 100 && caption.left >= scene.left - 1 && caption.right <= scene.right + 1,
           unclipped: ['main', '.reading-panel', '.reading-content'].every((selector) => !['hidden', 'clip'].includes(getComputedStyle(document.querySelector(selector)).overflowY)),
         }
       })
+      baseline ??= measured.positions
+      maximumLayoutShift = Math.max(maximumLayoutShift, ...measured.positions.map((value, i) => Math.abs(value - baseline[i])))
       maximumOverflow = Math.max(maximumOverflow, measured.overflow)
       controlsInView &&= measured.visible
       contentUnclipped &&= measured.unclipped
       await page.getByRole('button', { name: 'Another question' }).click()
       await page.evaluate(() => window.scrollTo(0, 0))
     }
-    results.push({ width, height, maximumOverflow, controlsInView, contentUnclipped })
+    results.push({ width, height, maximumOverflow, maximumLayoutShift, controlsInView, contentUnclipped })
   }
   const font = await page.locator('h2').evaluate((element) => getComputedStyle(element).fontFamily)
-  const failures = results.filter((result) => result.maximumOverflow > 1 || !result.controlsInView || !result.contentUnclipped)
+  const failures = results.filter((result) => result.maximumOverflow > 1 || result.maximumLayoutShift > 0.5 || !result.controlsInView || !result.contentUnclipped)
   if (failures.length || /Georgia|Times New Roman/.test(font)) {
     throw new Error(JSON.stringify({ failures, font }))
   }

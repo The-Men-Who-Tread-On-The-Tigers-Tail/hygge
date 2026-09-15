@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react'
+import { questions } from '../questions'
 
 export default function QuestionOverlay({ question, onAdvance, reducedMotion = false }) {
   const heading = useRef(null)
@@ -25,7 +26,11 @@ export default function QuestionOverlay({ question, onAdvance, reducedMotion = f
         <p className="intro">A little room to breathe.</p>
         <div className="question-panel" aria-live="polite" aria-atomic="true">
           <p className="question-label">Take a moment</p>
-          <h2 ref={heading}>{question}</h2>
+          <div className="question-stage">
+            {/* Invisible grid items reserve the tallest wrapping at any width. */}
+            {questions.map((text) => <span key={text} className="question-sizer" aria-hidden="true">{text}</span>)}
+            <h2 ref={heading}>{question}</h2>
+          </div>
         </div>
         <button type="button" onClick={onAdvance}>
           Another question <span aria-hidden="true">↗</span>

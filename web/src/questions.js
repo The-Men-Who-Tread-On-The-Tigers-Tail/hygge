@@ -1,4 +1,4 @@
-const questions = [
+export const questions = [
   'What small part of today felt most like home?',
   'What small part of today helped you breathe more slowly?',
   'What small part of today made the room feel warmer?',
