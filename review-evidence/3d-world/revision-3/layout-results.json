@@ -1,0 +1,147 @@
+{
+  "passedViewports": 20,
+  "questionsPerViewport": 8,
+  "font": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+  "results": [
+    {
+      "width": 1440,
+      "height": 900,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 1024,
+      "height": 600,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 900,
+      "height": 500,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 600,
+      "height": 600,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 320,
+      "height": 480,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 500,
+      "height": 500,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 600,
+      "height": 450,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 1200,
+      "height": 400,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 421,
+      "height": 500,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 450,
+      "height": 500,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 600,
+      "height": 500,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 601,
+      "height": 500,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    },
+    {
+      "width": 420,
+      "height": 501,
+      "maximumOverflow": 0,
+      "controlsInView": true,
+      "contentUnclipped": true
+    }
+  ]
+}
