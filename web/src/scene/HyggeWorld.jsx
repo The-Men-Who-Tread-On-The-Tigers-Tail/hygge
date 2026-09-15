@@ -3,6 +3,7 @@ import { createRoot, extend } from '@react-three/fiber'
 import * as THREE from 'three'
 import CameraRig from './CameraRig'
 import Lighting from './Lighting'
+import { PaintedSurfaceProvider } from './PaintedSurface'
 import QuestionDeck from './QuestionDeck'
 import { normalizePointer } from './motion'
 import Room from './Room'
@@ -83,9 +84,11 @@ export default function HyggeWorld({ onFailure, advanceSequence = 0, reducedMoti
             <color attach="background" args={[palette.background]} />
             <CameraRig motion={motion} />
             <Lighting />
-            <Room />
-            <QuestionDeck motion={motion} />
-            <RoomProps />
+            <PaintedSurfaceProvider>
+              <Room />
+              <QuestionDeck motion={motion} />
+              <RoomProps />
+            </PaintedSurfaceProvider>
           </WorldErrorBoundary>,
         )
         requestFrame.current = store.getState().invalidate

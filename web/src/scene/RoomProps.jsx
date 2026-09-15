@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { DoubleSide, Shape } from 'three'
 import { Box, Cylinder, Leaf } from './primitives'
 import { palette as p, placement } from './sceneConfig'
+import { PaintedMaterial } from './PaintedSurface'
 
 function Mug() {
   return (
@@ -54,7 +55,7 @@ function Cushion({ width, height, depth, color = p.sage, ...props }) {
     <group {...props}>
       <mesh position={[0, 0, -depth / 2 + 0.04]} castShadow receiveShadow>
         <extrudeGeometry args={[shape, { depth: depth - 0.08, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04, bevelSegments: 3, steps: 1, curveSegments: 6 }]} />
-        <meshStandardMaterial color={color} roughness={1} />
+        <PaintedMaterial color={color} roughness={1} />
       </mesh>
     </group>
   )

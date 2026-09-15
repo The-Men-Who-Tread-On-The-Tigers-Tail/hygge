@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { DoubleSide } from 'three'
 import { Box, Cylinder, Leaf } from './primitives'
+import { BlanketBasket, TeaTray } from './StoryDetails'
 import { palette as p, room, windowOpening as w } from './sceneConfig'
 
 function CurtainPanel({ x }) {
@@ -98,7 +99,7 @@ function Sideboard() {
       <Box position={[0.48, 0.71, 0.06]} size={[0.46, 0.065, 0.34]} color={p.sage} />
       <Box position={[0.5, 0.765, 0.06]} size={[0.4, 0.045, 0.3]} color={p.ceramic} />
       <Vase position={[0.52, 1.145, 0]} color={p.terracotta} greenery />
-      <Box position={[-0.45, 1.18, 0.03]} size={[0.47, 0.07, 0.35]} color={p.darkGreen} />
+      <TeaTray />
     </group>
   )
 }
@@ -119,6 +120,7 @@ export default function RoomDetails() {
         <Vase position={[0.4, 0, 0]} color={p.terracotta} />
       </Shelf>
       <Sideboard />
+      <BlanketBasket />
     </group>
   )
 }
