@@ -90,4 +90,4 @@ npm run build
 
 If Hygge is useful to you, you can support my work:
 
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/menwhotreadontigerstail)
+[![Buy Me a Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/menwhotreadontigerstail)
